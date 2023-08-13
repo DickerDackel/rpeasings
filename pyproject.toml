@@ -1,6 +1,6 @@
 [project]
-name = "FIXME"
-description = "FIXME"
+name = "rpeasings"
+description = "Robert Penner's easings functions in python"
 version = "0.0.1"
 readme = "README.md"
 
@@ -16,24 +16,21 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: pygame",
 ]
 
-dependencies = [
-    "pygame-ce",
-    "cooldown @ git+https://github.com/dickerdackel/cooldown",
-]
+dependencies = []
 
 [project.scripts]
-FIXME = "package.module:main"
 
 [project-urls]
-homepage = "https://github.com/dickerdackel/FIXME"
-bugtracker = "https://github.com/DickerDackel/FIXME/issues"
+homepage = "https://github.com/dickerdackel/rpeasings"
+bugtracker = "https://github.com/DickerDackel/rpeasings/issues"
 
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
-addopts = "-rA -s --cov-report term-missing -s"
+addopts = "-rA -s"
 testpaths = [
     "tests",
 ]
+

@@ -1,3 +1,11 @@
+Note: github and pypi want me to add a license, but my "contribution" is
+simply transfering the long existing functions to python syntax.
+
+Credit must go to R. Penner to release the original function set unter
+the BSD and MIT licenses.
+
+--
+
 MIT License
 
 Copyright (c) 2023 Michael Lamertz
