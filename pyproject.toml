@@ -1,7 +1,7 @@
 [project]
 name = "rpeasings"
 description = "Robert Penner's easings functions in python"
-version = "0.0.2"
+version = "0.0.2.1"
 readme = "README.md"
 
 authors = [
@@ -20,7 +20,7 @@ dependencies = []
 
 [project.scripts]
 
-[project-urls]
+[project.urls]
 homepage = "https://github.com/dickerdackel/rpeasings"
 bugtracker = "https://github.com/DickerDackel/rpeasings/issues"
 

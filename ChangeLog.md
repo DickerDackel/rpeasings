@@ -1,3 +1,6 @@
+# v0.0.2.1
+- fixed URL definition in pyproject.toml
+
 # v0.0.2
 
 - Docs added
