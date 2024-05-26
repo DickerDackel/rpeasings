@@ -36,7 +36,7 @@ __all__ = ['in_quad', 'out_quad', 'in_out_quad', 'in_cubic', 'out_cubic',
            'out_bounce', 'in_out_bounce', 'null']
 
 
-def null(t):
+def null(t: float) -> float:
     return t
 
 
@@ -47,7 +47,7 @@ c4 = (2 * pi) / 3
 c5 = (2 * pi) / 4.5
 
 
-def bounce_out(t):
+def bounce_out(t: float) -> float:
     n1 = 7.5625
     d1 = 2.75
 
@@ -64,75 +64,75 @@ def bounce_out(t):
         return n1 * ft * ft + 0.984375
 
 
-def in_quad(t):
+def in_quad(t: float) -> float:
     return t * t
 
 
-def out_quad(t):
+def out_quad(t: float) -> float:
     return 1 - (1 - t) * (1 - t)
 
 
-def in_out_quad(t):
+def in_out_quad(t: float) -> float:
     return 2 * t * t if t < 0.5 else 1 - (-2 * t + 2) ** 2 / 2
 
 
-def in_cubic(t):
+def in_cubic(t: float) -> float:
     return t * t * t
 
 
-def out_cubic(t):
+def out_cubic(t: float) -> float:
     return 1 - (1 - t) ** 3
 
 
-def in_out_cubic(t):
+def in_out_cubic(t: float) -> float:
     return 4 * t * t * t if t < 0.5 else 1 - (-2 * t + 2) ** 3 / 2
 
 
-def in_quart(t):
+def in_quart(t: float) -> float:
     return t * t * t * t
 
 
-def out_quart(t):
+def out_quart(t: float) -> float:
     return 1 - (1 - t) ** 4
 
 
-def in_out_quart(t):
+def in_out_quart(t: float) -> float:
     return 8 * t * t * t * t if t < 0.5 else 1 - (-2 * t + 2) ** 4 / 2
 
 
-def in_quint(t):
+def in_quint(t: float) -> float:
     return t * t * t * t * t
 
 
-def out_quint(t):
+def out_quint(t: float) -> float:
     return 1 - (1 - t) ** 5
 
 
-def in_out_quint(t):
+def in_out_quint(t: float) -> float:
     return 16 * t * t * t * t * t if t < 0.5 else 1 - (-2 * t + 2) ** 5 / 2
 
 
-def in_sine(t):
+def in_sine(t: float) -> float:
     return 1 - cos((t * pi) / 2)
 
 
-def out_sine(t):
+def out_sine(t: float) -> float:
     return sin((t * pi) / 2)
 
 
-def in_out_sine(t):
+def in_out_sine(t: float) -> float:
     return -(cos(pi * t) - 1) / 2
 
 
-def in_expo(t):
+def in_expo(t: float) -> float:
     return 0 if t == 0 else 2 ** (10 * t - 10)
 
 
-def out_expo(t):
+def out_expo(t: float) -> float:
     return 1 if t == 1 else 1 - 2 ** (-10 * t)
 
 
-def in_out_expo(t):
+def in_out_expo(t: float) -> float:
     if t == 0:
         return 0
     elif t == 1:
@@ -154,31 +154,31 @@ def in_out_expo(t):
     return 0 if t == 0 else (1 if t == 1 else (2 ** (20 * t - 10) / 2 if t < 0.5 else (2 - 2 ** (-20 * t + 10)) / 2))
 
 
-def in_circ(t):
+def in_circ(t: float) -> float:
     return 1 - (1 - t ** 2) ** 0.5
 
 
-def out_circ(t):
+def out_circ(t: float) -> float:
     return (1 - (t - 1) * (t - 1)) ** 0.5
 
 
-def in_out_circ(t):
+def in_out_circ(t: float) -> float:
     return (1 - (1 - (2 * t) ** 2) ** 0.5) / 2 if t < 0.5 else ((1 - (-2 * t + 2) ** 2) ** 0.5 + 1) / 2
 
 
-def in_back(t):
+def in_back(t: float) -> float:
     return c3 * t * t * t - c1 * t * t
 
 
-def out_back(t):
+def out_back(t: float) -> float:
     return 1 + c3 * (t - 1) ** 3 + c1 * (t - 1) ** 2
 
 
-def in_out_back(t):
+def in_out_back(t: float) -> float:
     return ((2 * t) ** 2 * ((c2 + 1) * 2 * t - c2)) / 2 if t < 0.5 else ((2 * t - 2) ** 2 * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2
 
 
-def in_elastic(t):
+def in_elastic(t: float) -> float:
     if t == 0:
         return 0
     elif t == 1:
@@ -187,7 +187,7 @@ def in_elastic(t):
         return -(2 ** (10 * t - 10)) * sin((t * 10 - 10.75) * c4)
 
 
-def out_elastic(t):
+def out_elastic(t: float) -> float:
     if t == 0:
         return 0
     elif t == 1:
@@ -196,7 +196,7 @@ def out_elastic(t):
         return 2 ** (-10 * t) * sin((t * 10 - 0.75) * c4) + 1
 
 
-def in_out_elastic(t):
+def in_out_elastic(t: float) -> float:
     if t == 0:
         return 0
     elif t == 1:
@@ -207,14 +207,14 @@ def in_out_elastic(t):
         return (2 ** (-20 * t + 10) * sin((20 * t - 11.125) * c5)) / 2 + 1
 
 
-def in_bounce(t):
+def in_bounce(t: float) -> float:
     return 1 - bounce_out(1 - t)
 
 
 out_bounce = bounce_out
 
 
-def in_out_bounce(t):
+def in_out_bounce(t: float) -> float:
     return (1 - bounce_out(1 - 2 * t)) / 2 if t < 0.5 else (1 + bounce_out(2 * t - 1)) / 2
 
 
