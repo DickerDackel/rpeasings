@@ -6,7 +6,7 @@ jobs:
   build_wheels:
     env:
       CIBW_BUILD: "cp313-manylinux_x86_64"
-      CIBW_BUILD_FRONTEND: "builduv"
+      CIBW_BUILD_FRONTEND: "build[uv]"
       
     runs-on: ${{ matrix.os }}
     strategy:
