@@ -49,9 +49,3 @@ line-length = 100
 force-sort-within-sections = false
 known-third-party = []
 lines-between-types = 1
-
-[tool.cibuildwheel]
-# Don't build for pypy
-skip = "pp*"
-# Only build for supported python versions
-build = ["cp310-*", "cp311-*", "cp312-*", "cp313-*", "cp314-*"]
