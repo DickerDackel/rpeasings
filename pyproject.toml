@@ -27,10 +27,11 @@ bugtracker = "https://github.com/DickerDackel/rpeasings/issues"
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-ext-modules = [
-    {name="rpeasings", sources=["src_c/rpeasings.c"]}
-]
+# Can't use since github actions' setuptools is too old
+# [tool.setuptools]
+# ext-modules = [
+#     {name="rpeasings", sources=["src_c/rpeasings.c"]}
+# ]
 
 
 [tool.pytest.ini_options]
