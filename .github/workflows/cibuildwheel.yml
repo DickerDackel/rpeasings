@@ -25,9 +25,9 @@ jobs:
         run: uv pip install cibuildwheel
 
       - name: Build wheels
-        run: uvx cibuildwheel --output-dir=wheelhouse
+        run: uvx cibuildwheel
 
       - uses: actions/upload-artifact@v4
         with:
           name: cibw-wheels-${{matrix.os}}-${{strategy.job-index}}
-          path: wheelhouse/*whl
+          path: dist/*
