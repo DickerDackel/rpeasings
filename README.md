@@ -51,8 +51,8 @@ Note: the following functions over-/undershoot:
     `in_back`     `out_back`     `in_out_back`
     `in_elastic`  `out_elastic`  `in_out_elastic`
 
-Additionally, you can then put that eased value as input into a `lerp`
-function to add dynamics to an otherwise linear range.
+You can then use this value as a factor or e.g. as input for another `lerp`
+function.
 
 Have fun, once you started using one, you'll probably find usecases for them
 everywhere in your game...
