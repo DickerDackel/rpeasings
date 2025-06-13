@@ -20,6 +20,9 @@ jobs:
       - name: Install UV
         uses: astral-sh/setup-uv@v6
 
+      - name: Create uv venv
+        run: uv venv
+
       - name: Install cibuildwheel
         run: uv pip install cibuildwheel==2.22.0
 
