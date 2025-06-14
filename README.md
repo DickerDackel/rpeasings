@@ -10,6 +10,10 @@ just a function call.
 See https://easings.net for a good visualisation of these to chose the right
 one.
 
+Alternatively, if you have pygame-ce installed, you can launch the
+`rpeasings-catalog.py` script in the `catalog` folder.  This will not work on
+the outdated "official" pygame release.
+
 ## Module contents
 
 With the exception of `null`, `in_expx` and `out_expx`, this is a pure python
