@@ -1,5 +1,13 @@
 # Robert Penner's Easing Functions
 
+## SYNOPSIS
+
+    `rpeasings.EASING_FUNCTION(t: float) -> float
+
+returns `t` (between 0 and 1) eased by the chosen function.
+
+# DESCRIPTION
+
 There are a plethora of versions available of these, many of which provide an
 object oriented interface, while most of the original easing functions could
 be simple inline expressions.
