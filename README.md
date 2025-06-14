@@ -6,7 +6,7 @@
 
 returns `t` (between 0 and 1) eased by the chosen function.
 
-# DESCRIPTION
+## DESCRIPTION
 
 There are a plethora of versions available of these, many of which provide an
 object oriented interface, while most of the original easing functions could
