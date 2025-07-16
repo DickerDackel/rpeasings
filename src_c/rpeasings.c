@@ -1,7 +1,10 @@
 #include <math.h>
 #include <Python.h>
 
+#define RPEASINGS_MODULE
+#include <rpeasings.h>
 #include <docstrings.h>
+
 #pragma GCC diagnostic ignored "-Wunused-function"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 
@@ -22,41 +25,6 @@
 |____/ \___|_| |_|_| |_|_|\__|_|\___/|_| |_|___/
 
 ----------------------------------------------------------------------*/
-
-/* easing implementations */
-
-double null(double t);
-double bounce_out(double t);
-double in_quad(double t);
-double out_quad(double t);
-double in_out_quad(double t);
-double in_cubic(double t);
-double out_cubic(double t);
-double in_out_cubic(double t);
-double in_quart(double t);
-double out_quart(double t);
-double in_out_quart(double t);
-double in_quint(double t);
-double out_quint(double t);
-double in_out_quint(double t);
-double in_sine(double t);
-double out_sine(double t);
-double in_out_sine(double t);
-double in_expo(double t);
-double out_expo(double t);
-double in_out_expo(double t);
-double in_circ(double t);
-double out_circ(double t);
-double in_out_circ(double t);
-double in_back(double t);
-double out_back(double t);
-double in_out_back(double t);
-double in_elastic(double t);
-double out_elastic(double t);
-double in_out_elastic(double t);
-double in_bounce(double t);
-double out_bounce(double t);
-double in_out_bounce(double t);
 
 /* Module level functions */
 static PyObject * rpeasings_null(PyObject *self, PyObject *t);
@@ -93,6 +61,7 @@ static PyObject * rpeasings_out_bounce(PyObject *self, PyObject *t);
 static PyObject * rpeasings_in_out_bounce(PyObject *self, PyObject *t);
 
 /* Module init */
+static int rpeasings_module_exec(PyObject *m);
 PyMODINIT_FUNC PyInit_rpeasings(void);
 
 /*----------------------------------------------------------------------
@@ -142,12 +111,19 @@ static PyMethodDef rpeasings_methods[] = {
 };
 
 
+static PyModuleDef_Slot rpeasings_module_slots[] = {
+    {Py_mod_exec, rpeasings_module_exec},
+    {0, NULL}
+};
+
+
 static PyModuleDef rpeasings_module = {
     .m_base = PyModuleDef_HEAD_INIT,
     .m_name = "rpeasings",
     .m_doc = MODULE_DOCSTRING,
-    .m_size = -1,
+    .m_size = 0,
     .m_methods = rpeasings_methods,
+    .m_slots = rpeasings_module_slots,
 };
 
 
@@ -161,11 +137,11 @@ static PyModuleDef rpeasings_module = {
 
 ----------------------------------------------------------------------*/
 
-double null(double t) {
+static double rpeasings_impl_null(double t) {
     return t;
 }
 
-double bounce_out(double t) {
+static double rpeasings_impl_bounce_out(double t) {
     double n1 = 7.5625;
     double d1 = 2.75;
 
@@ -186,17 +162,17 @@ double bounce_out(double t) {
 }
 
 
-double in_quad(double t) {
+static double rpeasings_impl_in_quad(double t) {
     return t * t;
 }
 
 
-double out_quad(double t) {
+static double rpeasings_impl_out_quad(double t) {
     return 1.0 - (1.0 - t) * (1.0 - t);
 }
 
 
-double in_out_quad(double t) {
+static double rpeasings_impl_in_out_quad(double t) {
     double f = -2 * t + 2.0;
 
     return 
@@ -206,19 +182,19 @@ double in_out_quad(double t) {
 }
 
 
-double in_cubic(double t) {
+static double rpeasings_impl_in_cubic(double t) {
     return t * t * t;
 }
 
 
-double out_cubic(double t) {
+static double rpeasings_impl_out_cubic(double t) {
     double f = 1.0 - t;
 
     return 1.0 - f * f * f;
 }
 
 
-double in_out_cubic(double t) {
+static double rpeasings_impl_in_out_cubic(double t) {
     double f = -2.0 * t + 2.0;
 
     return 
@@ -228,19 +204,19 @@ double in_out_cubic(double t) {
 }
 
 
-double in_quart(double t) {
+static double rpeasings_impl_in_quart(double t) {
     return t * t * t * t;
 }
 
 
-double out_quart(double t) {
+static double rpeasings_impl_out_quart(double t) {
     double f = 1.0 - t;
 
     return 1.0 - f * f * f * f;
 }
 
 
-double in_out_quart(double t) {
+static double rpeasings_impl_in_out_quart(double t) {
     double f = -2.0 * t + 2.0;
 
     return
@@ -250,19 +226,19 @@ double in_out_quart(double t) {
 }
 
 
-double in_quint(double t) {
+static double rpeasings_impl_in_quint(double t) {
     return t * t * t * t * t;
 }
 
 
-double out_quint(double t) {
+static double rpeasings_impl_out_quint(double t) {
     double f = 1.0 - t;
 
     return 1.0 - f * f * f * f * f;
 }
 
 
-double in_out_quint(double t) {
+static double rpeasings_impl_in_out_quint(double t) {
     double f = -2.0 * t + 2.0;
 
     return
@@ -272,22 +248,22 @@ double in_out_quint(double t) {
 }
 
 
-double in_sine(double t) {
+static double rpeasings_impl_in_sine(double t) {
     return 1.0 - cos((t * PI) / 2.0);
 }
 
 
-double out_sine(double t) {
+static double rpeasings_impl_out_sine(double t) {
     return sin((t * PI) / 2.0);
 }
 
 
-double in_out_sine(double t) {
+static double rpeasings_impl_in_out_sine(double t) {
     return -(cos(PI * t) - 1.0) / 2.0;
 }
 
 
-double in_expo(double t) {
+static double rpeasings_impl_in_expo(double t) {
     return 
         t == 0
         ? 0
@@ -295,7 +271,7 @@ double in_expo(double t) {
 }
 
 
-double out_expo(double t) {
+static double rpeasings_impl_out_expo(double t) {
     return
         t == 1.0
         ? 1.0
@@ -303,7 +279,7 @@ double out_expo(double t) {
 }
 
 
-double in_out_expo(double t) {
+static double rpeasings_impl_in_out_expo(double t) {
     if (t == 0) {
         return 0;
     }
@@ -331,17 +307,17 @@ double in_out_expo(double t) {
     }
 }
 
-double in_circ(double t) {
+static double rpeasings_impl_in_circ(double t) {
     return 1.0 - sqrt(1.0 - t * t);
 }
 
 
-double out_circ(double t) {
+static double rpeasings_impl_out_circ(double t) {
     return sqrt(1.0 - (t - 1.0) * (t - 1.0));
 }
 
 
-double in_out_circ(double t) {
+static double rpeasings_impl_in_out_circ(double t) {
     double f1 = t + t;
     double f2 = -2.0 * t + 2.0;
 
@@ -352,19 +328,19 @@ double in_out_circ(double t) {
 }
 
 
-double in_back(double t) {
+static double rpeasings_impl_in_back(double t) {
     return C3 * t * t * t - C1 * t * t;
 }
 
 
-double out_back(double t) {
+static double rpeasings_impl_out_back(double t) {
     double f = t - 1.0;
 
     return 1.0 + C3 * f * f * f + C1 * f * f;
 }
 
 
-double in_out_back(double t) {
+static double rpeasings_impl_in_out_back(double t) {
     double f1 = t + t;
     double f2 = f1 - 2.0;
 
@@ -375,7 +351,7 @@ double in_out_back(double t) {
 }
 
 
-double in_elastic(double t) {
+static double rpeasings_impl_in_elastic(double t) {
     if (t == 0) {
         return 0;
     }
@@ -387,7 +363,7 @@ double in_elastic(double t) {
 }
 
 
-double out_elastic(double t) {
+static double rpeasings_impl_out_elastic(double t) {
     if (t == 0) {
         return 0;
     }
@@ -399,7 +375,7 @@ double out_elastic(double t) {
 }
 
 
-double in_out_elastic(double t) {
+static double rpeasings_impl_in_out_elastic(double t) {
     if (t == 0) {
         return 0;
     }
@@ -414,21 +390,21 @@ double in_out_elastic(double t) {
 }
 
 
-double in_bounce(double t) {
-    return 1.0 - bounce_out(1.0 - t);
+static double rpeasings_impl_in_bounce(double t) {
+    return 1.0 - rpeasings_impl_bounce_out(1.0 - t);
 }
 
 
-double out_bounce(double t) {
-    return bounce_out(t);
+static double rpeasings_impl_out_bounce(double t) {
+    return rpeasings_impl_bounce_out(t);
 }
 
 
-double in_out_bounce(double t) {
+static double rpeasings_impl_in_out_bounce(double t) {
     return
         t < 0.5
-        ? (1.0 - bounce_out(1.0 - 2.0 * t)) / 2.0
-        : (1.0 + bounce_out(2.0 * t - 1.0)) / 2.0;
+        ? (1.0 - rpeasings_impl_bounce_out(1.0 - 2.0 * t)) / 2.0
+        : (1.0 + rpeasings_impl_bounce_out(2.0 * t - 1.0)) / 2.0;
 }
 
 
@@ -452,162 +428,162 @@ PyObject * get_t_and_call_easing(PyObject *p_t, double (*ease)(double)) {
 }
 
 static PyObject * rpeasings_null(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &null);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_null);
 }
 
 
 static PyObject * rpeasings_bounce_out(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &bounce_out);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_bounce_out);
 }
 
 
 static PyObject * rpeasings_in_quad(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_quad);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_quad);
 }
 
 
 static PyObject * rpeasings_out_quad(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &out_quad);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_out_quad);
 }
 
 
 static PyObject * rpeasings_in_out_quad(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_out_quad);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_out_quad);
 }
 
 
 static PyObject * rpeasings_in_cubic(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_cubic);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_cubic);
 }
 
 
 static PyObject * rpeasings_out_cubic(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &out_cubic);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_out_cubic);
 }
 
 
 static PyObject * rpeasings_in_out_cubic(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_out_cubic);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_out_cubic);
 }
 
 
 static PyObject * rpeasings_in_quart(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_quart);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_quart);
 }
 
 
 static PyObject * rpeasings_out_quart(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &out_quart);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_out_quart);
 }
 
 
 static PyObject * rpeasings_in_out_quart(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_out_quart);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_out_quart);
 }
 
 
 static PyObject * rpeasings_in_quint(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_quint);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_quint);
 }
 
 
 static PyObject * rpeasings_out_quint(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &out_quint);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_out_quint);
 }
 
 
 static PyObject * rpeasings_in_out_quint(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_out_quint);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_out_quint);
 }
 
 
 static PyObject * rpeasings_in_sine(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_sine);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_sine);
 }
 
 
 static PyObject * rpeasings_out_sine(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &out_sine);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_out_sine);
 }
 
 
 static PyObject * rpeasings_in_out_sine(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_out_sine);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_out_sine);
 }
 
 
 static PyObject * rpeasings_in_expo(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_expo);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_expo);
 }
 
 
 static PyObject * rpeasings_out_expo(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &out_expo);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_out_expo);
 }
 
 
 static PyObject * rpeasings_in_out_expo(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_out_expo);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_out_expo);
 }
 
 
 static PyObject * rpeasings_in_circ(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_circ);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_circ);
 }
 
 
 static PyObject * rpeasings_out_circ(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &out_circ);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_out_circ);
 }
 
 
 static PyObject * rpeasings_in_out_circ(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_out_circ);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_out_circ);
 }
 
 
 static PyObject * rpeasings_in_back(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_back);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_back);
 }
 
 
 static PyObject * rpeasings_out_back(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &out_back);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_out_back);
 }
 
 
 static PyObject * rpeasings_in_out_back(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_out_back);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_out_back);
 }
 
 
 static PyObject * rpeasings_in_elastic(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_elastic);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_elastic);
 }
 
 
 static PyObject * rpeasings_out_elastic(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &out_elastic);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_out_elastic);
 }
 
 
 static PyObject * rpeasings_in_out_elastic(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_out_elastic);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_out_elastic);
 }
 
 
 static PyObject * rpeasings_in_bounce(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_bounce);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_bounce);
 }
 
 
 static PyObject * rpeasings_out_bounce(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &out_bounce);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_out_bounce);
 }
 
 
 static PyObject * rpeasings_in_out_bounce(PyObject *self, PyObject *p_t) {
-    return get_t_and_call_easing(p_t, &in_out_bounce);
+    return get_t_and_call_easing(p_t, &rpeasings_impl_in_out_bounce);
 }
 
 /*----------------------------------------------------------------------
@@ -628,12 +604,51 @@ void add_function_to_dict(PyObject *dict, const char *key, PyMethodDef *func_def
     }
 }
 
-PyMODINIT_FUNC PyInit_rpeasings(void) {
-    PyObject *m;
 
-    m = PyModule_Create(&rpeasings_module);
-    if (m == NULL)
-	return NULL;
+static int rpeasings_module_exec(PyObject *m) {
+    PyObject *c_api_object;
+
+    static void *rpeasings_API[] = {
+	(void *)rpeasings_impl_null,
+	(void *)rpeasings_impl_null,
+	(void *)rpeasings_impl_bounce_out,
+	(void *)rpeasings_impl_in_quad,
+	(void *)rpeasings_impl_out_quad,
+	(void *)rpeasings_impl_in_out_quad,
+	(void *)rpeasings_impl_in_cubic,
+	(void *)rpeasings_impl_out_cubic,
+	(void *)rpeasings_impl_in_out_cubic,
+	(void *)rpeasings_impl_in_quart,
+	(void *)rpeasings_impl_out_quart,
+	(void *)rpeasings_impl_in_out_quart,
+	(void *)rpeasings_impl_in_quint,
+	(void *)rpeasings_impl_out_quint,
+	(void *)rpeasings_impl_in_out_quint,
+	(void *)rpeasings_impl_in_sine,
+	(void *)rpeasings_impl_out_sine,
+	(void *)rpeasings_impl_in_out_sine,
+	(void *)rpeasings_impl_in_expo,
+	(void *)rpeasings_impl_out_expo,
+	(void *)rpeasings_impl_in_out_expo,
+	(void *)rpeasings_impl_in_circ,
+	(void *)rpeasings_impl_out_circ,
+	(void *)rpeasings_impl_in_out_circ,
+	(void *)rpeasings_impl_in_back,
+	(void *)rpeasings_impl_out_back,
+	(void *)rpeasings_impl_in_out_back,
+	(void *)rpeasings_impl_in_elastic,
+	(void *)rpeasings_impl_out_elastic,
+	(void *)rpeasings_impl_in_out_elastic,
+	(void *)rpeasings_impl_in_bounce,
+	(void *)rpeasings_impl_out_bounce,
+	(void *)rpeasings_impl_in_out_bounce,
+    };
+
+    c_api_object = PyCapsule_New((void *)rpeasings_API, "rpeasings._C_API", NULL);
+
+    if (PyModule_Add(m, "_C_API", c_api_object) < 0) {
+	return -1;
+    }
 
     PyObject *all = Py_BuildValue(
             "(s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s)",
@@ -692,5 +707,13 @@ PyMODINIT_FUNC PyInit_rpeasings(void) {
         Py_CLEAR(easings);
     }
 
-    return m;
+    return 0;
+}
+
+
+
+PyMODINIT_FUNC PyInit_rpeasings(void) {
+    PyObject *m;
+
+    return PyModuleDef_Init(&rpeasings_module);
 }
