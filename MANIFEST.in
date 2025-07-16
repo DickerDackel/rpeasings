@@ -1,2 +1,3 @@
 include ChangeLog.md
+graft include
 graft catalog

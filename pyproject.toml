@@ -27,6 +27,9 @@ bugtracker = "https://github.com/DickerDackel/rpeasings/issues"
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.package-data]
+headers = ['include/*.h']
+
 [tool.pytest.ini_options]
 addopts = "-rA"
 testpaths = [
