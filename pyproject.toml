@@ -1,7 +1,7 @@
 [project]
 name = "rpeasings"
 description = "Robert Penner's easings functions in python"
-version = "0.4.2"
+version = "0.4.3"
 readme = "README.md"
 
 authors = [
@@ -37,7 +37,7 @@ testpaths = [
 ]
 
 [tool.ruff]
-ignore = [
+lint.ignore = [
     # "ANN",
     "E501",
     "E701",
