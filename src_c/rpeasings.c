@@ -606,7 +606,9 @@ void add_function_to_dict(PyObject *dict, const char *key, PyMethodDef *func_def
 
 
 static int _rpeasings_module_exec(PyObject *m) {
-    PyObject *c_api_object;
+    PyObject *c_api_object = NULL;
+    PyObject *easings = NULL;
+    PyObject *all = NULL;
 
     static void *rpeasings_API[] = {
 	(void *)rpeasings_impl_null,
@@ -645,12 +647,19 @@ static int _rpeasings_module_exec(PyObject *m) {
     };
 
     c_api_object = PyCapsule_New((void *)rpeasings_API, "_rpeasings._C_API", NULL);
+    if (c_api_object == NULL)
+	goto error;
 
-    if (PyModule_Add(m, "_C_API", c_api_object) < 0) {
-	return -1;
-    }
+    if (PyModule_AddObjectRef(m, "_C_API", c_api_object) < 0)
+	goto error
 
-    PyObject *easings = PyDict_New();
+    easings = PyDict_New();
+    if (easings == NULL)
+	goto error;
+
+    if (PyModule_AddObjectRef(m, "easings", easings) < 0)
+	goto error
+
     add_function_to_dict(easings, "null", &rpeasings_methods[0]);
     add_function_to_dict(easings, "bounce_out", &rpeasings_methods[1]);
     add_function_to_dict(easings, "in_quad", &rpeasings_methods[2]);
@@ -684,14 +693,7 @@ static int _rpeasings_module_exec(PyObject *m) {
     add_function_to_dict(easings, "out_bounce", &rpeasings_methods[30]);
     add_function_to_dict(easings, "in_out_bounce", &rpeasings_methods[31]);
 
-    if (easings != NULL) {
-        PyModule_AddObject(m, "easings", easings);
-    }
-    else {
-        Py_CLEAR(easings);
-    }
-
-    PyObject *all = Py_BuildValue(
+    all = Py_BuildValue(
         "(s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s)",
         "null", "bounce_out", "in_quad", "out_quad", "in_out_quad", "in_cubic",
         "out_cubic", "in_out_cubic", "in_quart", "out_quart", "in_out_quart",
@@ -700,16 +702,19 @@ static int _rpeasings_module_exec(PyObject *m) {
         "out_circ", "in_out_circ", "in_back", "out_back", "in_out_back",
         "in_elastic", "out_elastic", "in_out_elastic", "in_bounce",
         "out_bounce", "in_out_bounce", "easings");
-    if (all != NULL) {
-        PyModule_AddObject(m, "__all__", all);
-    }
-    else {
-        Py_CLEAR(all);
-    }
+    if (all == NULL)
+	goto error;
+
+    if (PyModule_AddObject(m, "__all__", all) < 0)
+	goto error
 
     return 0;
+error:
+    Py_XDECREF(c_api_object);
+    Py_XDECREF(easings);
+    Py_XDECREF(all);
+    return -1
 }
-
 
 
 PyMODINIT_FUNC PyInit__rpeasings(void) {
