@@ -1,3 +1,6 @@
+# v0.4.5
+- why am I doing releases before actually testing for typos?
+
 # v0.4.4
 - Used too new python API
 
