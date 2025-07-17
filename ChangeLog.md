@@ -1,3 +1,6 @@
+# v0.4.4
+- Used too new python API
+
 # v0.4.3
 - rpeasings now exports a C API
 - we now have stubs
