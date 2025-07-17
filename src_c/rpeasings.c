@@ -651,14 +651,14 @@ static int _rpeasings_module_exec(PyObject *m) {
 	goto error;
 
     if (PyModule_AddObjectRef(m, "_C_API", c_api_object) < 0)
-	goto error
+	goto error;
 
     easings = PyDict_New();
     if (easings == NULL)
 	goto error;
 
     if (PyModule_AddObjectRef(m, "easings", easings) < 0)
-	goto error
+	goto error;
 
     add_function_to_dict(easings, "null", &rpeasings_methods[0]);
     add_function_to_dict(easings, "bounce_out", &rpeasings_methods[1]);
@@ -706,14 +706,14 @@ static int _rpeasings_module_exec(PyObject *m) {
 	goto error;
 
     if (PyModule_AddObject(m, "__all__", all) < 0)
-	goto error
+	goto error;
 
     return 0;
 error:
     Py_XDECREF(c_api_object);
     Py_XDECREF(easings);
     Py_XDECREF(all);
-    return -1
+    return -1;
 }
 
 
