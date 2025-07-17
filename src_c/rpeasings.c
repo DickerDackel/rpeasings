@@ -61,8 +61,8 @@ static PyObject * rpeasings_out_bounce(PyObject *self, PyObject *t);
 static PyObject * rpeasings_in_out_bounce(PyObject *self, PyObject *t);
 
 /* Module init */
-static int rpeasings_module_exec(PyObject *m);
-PyMODINIT_FUNC PyInit_rpeasings(void);
+static int _rpeasings_module_exec(PyObject *m);
+PyMODINIT_FUNC PyInit__rpeasings(void);
 
 /*----------------------------------------------------------------------
      _     _           _ _                 
@@ -112,14 +112,14 @@ static PyMethodDef rpeasings_methods[] = {
 
 
 static PyModuleDef_Slot rpeasings_module_slots[] = {
-    {Py_mod_exec, rpeasings_module_exec},
+    {Py_mod_exec, _rpeasings_module_exec},
     {0, NULL}
 };
 
 
 static PyModuleDef rpeasings_module = {
     .m_base = PyModuleDef_HEAD_INIT,
-    .m_name = "rpeasings",
+    .m_name = "_rpeasings",
     .m_doc = MODULE_DOCSTRING,
     .m_size = 0,
     .m_methods = rpeasings_methods,
@@ -605,7 +605,7 @@ void add_function_to_dict(PyObject *dict, const char *key, PyMethodDef *func_def
 }
 
 
-static int rpeasings_module_exec(PyObject *m) {
+static int _rpeasings_module_exec(PyObject *m) {
     PyObject *c_api_object;
 
     static void *rpeasings_API[] = {
@@ -644,26 +644,10 @@ static int rpeasings_module_exec(PyObject *m) {
 	(void *)rpeasings_impl_in_out_bounce,
     };
 
-    c_api_object = PyCapsule_New((void *)rpeasings_API, "rpeasings._C_API", NULL);
+    c_api_object = PyCapsule_New((void *)rpeasings_API, "_rpeasings._C_API", NULL);
 
     if (PyModule_Add(m, "_C_API", c_api_object) < 0) {
 	return -1;
-    }
-
-    PyObject *all = Py_BuildValue(
-            "(s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s)",
-            "null", "bounce_out", "in_quad", "out_quad", "in_out_quad",
-            "in_cubic", "out_cubic", "in_out_cubic", "in_quart", "out_quart",
-            "in_out_quart", "in_quint", "out_quint", "in_out_quint",
-            "in_sine", "out_sine", "in_out_sine", "in_expo", "out_expo",
-            "in_out_expo", "in_circ", "out_circ", "in_out_circ", "in_back",
-            "out_back", "in_out_back", "in_elastic", "out_elastic",
-            "in_out_elastic", "in_bounce", "out_bounce", "in_out_bounce");
-    if (all != NULL) {
-        PyModule_AddObject(m, "__all__", all);
-    }
-    else {
-        Py_CLEAR(all);
     }
 
     PyObject *easings = PyDict_New();
@@ -707,12 +691,28 @@ static int rpeasings_module_exec(PyObject *m) {
         Py_CLEAR(easings);
     }
 
+    PyObject *all = Py_BuildValue(
+        "(s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s, s)",
+        "null", "bounce_out", "in_quad", "out_quad", "in_out_quad", "in_cubic",
+        "out_cubic", "in_out_cubic", "in_quart", "out_quart", "in_out_quart",
+        "in_quint", "out_quint", "in_out_quint", "in_sine", "out_sine",
+        "in_out_sine", "in_expo", "out_expo", "in_out_expo", "in_circ",
+        "out_circ", "in_out_circ", "in_back", "out_back", "in_out_back",
+        "in_elastic", "out_elastic", "in_out_elastic", "in_bounce",
+        "out_bounce", "in_out_bounce", "easings");
+    if (all != NULL) {
+        PyModule_AddObject(m, "__all__", all);
+    }
+    else {
+        Py_CLEAR(all);
+    }
+
     return 0;
 }
 
 
 
-PyMODINIT_FUNC PyInit_rpeasings(void) {
+PyMODINIT_FUNC PyInit__rpeasings(void) {
     PyObject *m;
 
     return PyModuleDef_Init(&rpeasings_module);
