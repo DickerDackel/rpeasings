@@ -1,5 +1,6 @@
 import pytest
 
+from importlib.resources import files
 from pytest import approx
 
 import rpeasings
@@ -258,6 +259,9 @@ def test_in_out_bounce():
     assert approx(rpeasings.in_out_bounce(1.0), abs=0.00001) == 1.0
     assert approx(rpeasings.in_out_bounce(5.0), abs=0.00001) == 245.75
 
+def test_include():
+    assert (files('rpeasings.include') / 'rpeasings.h').exists()
+
 
 if __name__ == "__main__":
     test_null()
@@ -292,3 +296,4 @@ if __name__ == "__main__":
     test_in_bounce()
     test_out_bounce()
     test_in_out_bounce()
+    test_include()
