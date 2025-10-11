@@ -9,20 +9,17 @@ jobs:
     strategy:
       matrix:
         # macos-13 is an intel runner, macos-14 is apple silicon
-        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, windows-11-arm, macos-13, macos-14]
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, windows-11-arm, macos-15-intel, macos-latest]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+      - name: Install cibuildwheel
+        run: python3 -m pip install cibuildwheel==3.2.0
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.1.1
-        # env:
-        #   CIBW_SOME_OPTION: value
-        #   ...
-        # with:
-        #   package-dir: .
-        #   output-dir: wheelhouse
-        #   config-file: "{package}/pyproject.toml"
+        run: python3 -m cibuildwheel --output-dir=wheelhouse
 
       - uses: actions/upload-artifact@v4
         with:
