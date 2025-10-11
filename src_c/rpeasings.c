@@ -1,5 +1,7 @@
 #include <math.h>
 #include <Python.h>
+#include <pyerrors.h>
+#include <object.h>
 
 #define RPEASINGS_MODULE
 #include <rpeasings.h>
