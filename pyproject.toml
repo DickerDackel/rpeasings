@@ -1,7 +1,7 @@
 [project]
 name = "rpeasings"
 description = "Robert Penner's easings functions in python"
-version = "0.4.6"
+version = "0.4.7"
 readme = "README.md"
 
 authors = [
